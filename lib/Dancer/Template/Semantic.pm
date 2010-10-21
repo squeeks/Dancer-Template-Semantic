@@ -2,6 +2,7 @@ package Dancer::Template::Semantic;
 
 use strict;
 use warnings;
+use Carp;
 
 use Dancer::Config 'setting';
 use Dancer::ModuleLoader;
@@ -9,23 +10,21 @@ use Dancer::FileUtils 'path';
 
 use base 'Dancer::Template::Abstract';
 
-my $_engine;
-
 sub init {
     my ($self) = @_;
 
-    die "Template::Semantic is needed by Dancer::Template::Semantic"
+    croak "Template::Semantic is needed by Dancer::Template::Semantic"
       unless Dancer::ModuleLoader->load('Template::Semantic');
 
-    $_engine = Template::Semantic->new;
+    $self->{_engine} = Template::Semantic->new;
 }
 
 sub render {
     my ($self, $template, $tokens) = @_;
-    die "'$template' is not a regular file"
+    croak "'$template' is not a regular file"
       if !ref($template) && (!-f $template);
 
-    my $content = $_engine->process($template, $tokens) or die $_engine->error;
+    my $content = $self->{_engine}->process($template, $tokens) or croak $self->{_engine}->error;
     return $content;
 }
 
