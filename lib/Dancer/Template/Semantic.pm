@@ -54,6 +54,10 @@ B<set> keyword.
 
 L<Dancer>, L<Template::Semantic>
 
+=head1 CONTRIBUTORS
+
+Damien Krotkine
+
 =head1 AUTHOR
 
 Squeeks, C<squeek at cpan.org>
