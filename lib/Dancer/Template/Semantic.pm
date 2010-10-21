@@ -16,7 +16,17 @@ sub init {
     croak "Template::Semantic is needed by Dancer::Template::Semantic"
       unless Dancer::ModuleLoader->load('Template::Semantic');
 
-    $self->{_engine} = Template::Semantic->new;
+    my %config = %{$self->config};
+    if (keys %config) {
+        my $parser = $config{parser};
+        if (defined $parser and length $parser) {
+            Dancer::ModuleLoader->require($parser)
+              or croak "Failed to load '$parser'";
+            $config{parser} = $parser->new();
+        }
+        $self->{_engine} = Template::Semantic->new( %config );
+    }
+    $self->{_engine} = Template::Semantic->new();
 }
 
 sub render {
@@ -50,13 +60,32 @@ In order to use this engine, use the template setting:
 This can be done in your config.yml file or directly in your app code with the
 B<set> keyword. 
 
+=head1 OPTIONS
+
+It is possible to pass options to this template engine by adding more settings.
+The options will be passed to the constructor (the C<new> method) of the
+L<Template::Semantic> module. See L<Template::Semantic> for the details. Here is
+an example:
+
+    template: semantic
+    engines:
+      semantic:
+        parser: My::Super::Parser
+        recover: 2
+
+An instance of C<My::Supper::Parser> will be created using C<<
+My::Supper::Parser->new() >>. If your parser needs parameters, you'll have to
+create a proxy class or something like that.
+
 =head1 SEE ALSO
 
 L<Dancer>, L<Template::Semantic>
 
-=head1 AUTHOR
+=head1 AUTHORS
 
 Squeeks, C<squeek at cpan.org>
+
+Damien "dams" Krotkine, C<< <dams at cpan.org> >>
 
 =head1 LICENSE
 
