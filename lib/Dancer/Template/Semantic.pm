@@ -81,11 +81,13 @@ create a proxy class or something like that.
 
 L<Dancer>, L<Template::Semantic>
 
-=head1 AUTHORS
+=head1 CONTRIBUTORS
+
+Damien "dams" Krotkine C<< <dams at cpan.org> >>
+
+=head1 AUTHOR
 
 Squeeks, C<squeek at cpan.org>
-
-Damien "dams" Krotkine, C<< <dams at cpan.org> >>
 
 =head1 LICENSE
 
