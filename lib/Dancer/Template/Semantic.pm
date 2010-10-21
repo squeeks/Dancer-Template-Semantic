@@ -10,29 +10,35 @@ use Dancer::FileUtils 'path';
 
 use base 'Dancer::Template::Abstract';
 
-sub init {
-    my ($self) = @_;
+sub init
+{
+	my ($self) = @_;
 
-    croak "Template::Semantic is needed by Dancer::Template::Semantic"
-      unless Dancer::ModuleLoader->load('Template::Semantic');
+	croak "Template::Semantic is needed by Dancer::Template::Semantic"
+		unless Dancer::ModuleLoader->load('Template::Semantic');
 
-    my %config = %{$self->config};
-    if (keys %config) {
-        my $parser = $config{parser};
-        if (defined $parser and length $parser) {
-            Dancer::ModuleLoader->require($parser)
-              or croak "Failed to load '$parser'";
-            $config{parser} = $parser->new();
-        }
-        $self->{_engine} = Template::Semantic->new( %config );
-    }
-    $self->{_engine} = Template::Semantic->new();
+	my %config = %{$self->config};
+	if(keys %config)
+	{
+		my $parser = $config{parser};
+		if (defined $parser and length $parser)
+		{
+			Dancer::ModuleLoader->require($parser)
+			or croak "Failed to load '$parser'";
+			$config{parser} = $parser->new();
+		}
+
+		$self->{_engine} = Template::Semantic->new( %config );
+	}
+
+	$self->{_engine} = Template::Semantic->new();
 }
 
-sub render {
+
+sub render
+{
     my ($self, $template, $tokens) = @_;
-    croak "'$template' is not a regular file"
-      if !ref($template) && (!-f $template);
+    croak "'$template' is not a regular file" if !ref($template) && (!-f $template);
 
     my $content = $self->{_engine}->process($template, $tokens) or croak $self->{_engine}->error;
     return $content;
